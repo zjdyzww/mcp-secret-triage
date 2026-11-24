@@ -28,6 +28,13 @@ jobs:
       - name: 校验 server.json
         run: ./mcp-publisher validate
 
+      - name: 构建并推送 OCI 制品（registry 只接受 npmjs 或 OCI；npmjs 注册需 CAPTCHA）
+        run: |
+          set -euo pipefail
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          docker build -t "ghcr.io/${GITHUB_REPOSITORY,,}:0.1.0" .
+          docker push "ghcr.io/${GITHUB_REPOSITORY,,}:0.1.0"
+
       - name: OIDC 登录并发布
         run: |
           set -euo pipefail

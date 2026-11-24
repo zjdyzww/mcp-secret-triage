@@ -5,14 +5,30 @@
   "version": "0.1.0",
   "packages": [
     {
-      "registryType": "npm",
-      "registryBaseUrl": "https://npm.pkg.github.com",
-      "identifier": "@zjdyzww/secret-triage",
+      "registryType": "oci",
+      "identifier": "ghcr.io/zjdyzww/secret-triage:0.1.0",
       "version": "0.1.0",
       "transport": {
         "type": "stdio"
       },
-      "runtimeHint": "node"
+      "runtimeHint": "docker",
+      "runtimeArguments": [
+        {
+          "type": "positional",
+          "value": "run",
+          "valueHint": "subcommand"
+        },
+        {
+          "type": "positional",
+          "value": "-i",
+          "valueHint": "flag"
+        },
+        {
+          "type": "positional",
+          "value": "--rm",
+          "valueHint": "flag"
+        }
+      ]
     }
   ],
   "tools": [
