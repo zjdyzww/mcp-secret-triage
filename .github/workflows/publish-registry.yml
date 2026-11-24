@@ -1,0 +1,35 @@
+# 通过 GitHub Actions OIDC 免交互发布到 MCP Registry。
+# 为什么这样做：`mcp-publisher login github` 是交互式 OAuth，需要人点浏览器；
+# 而 github-oidc 允许在 Actions 里用仓库身份认证——这是 agent 能自主完成发布的正规路径。
+name: publish-mcp-registry
+on:
+  workflow_dispatch:
+  push:
+    paths: ['server.json']
+
+permissions:
+  contents: read
+  id-token: write        # OIDC 必需
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 下载官方 mcp-publisher
+        run: |
+          set -euo pipefail
+          TAG=$(curl -fsSL https://api.github.com/repos/modelcontextprotocol/registry/releases/latest | python3 -c 'import sys,json;print(json.load(sys.stdin)["tag_name"])')
+          curl -fsSL -o publisher.tar.gz "https://github.com/modelcontextprotocol/registry/releases/download/${TAG}/mcp-publisher_linux_amd64.tar.gz"
+          tar -xzf publisher.tar.gz
+          ./mcp-publisher --help >/dev/null
+
+      - name: 校验 server.json
+        run: ./mcp-publisher validate
+
+      - name: OIDC 登录并发布
+        run: |
+          set -euo pipefail
+          ./mcp-publisher login github-oidc
+          ./mcp-publisher publish

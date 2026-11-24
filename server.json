@@ -1,7 +1,7 @@
 {
-  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.zjdyzww/secret-triage",
-  "description": "Triage a secret-scan report into real findings vs noise (test fixtures, rule files, docs, build artifacts, detector source, knowledge snapshots). Zero deps, no network.",
+  "description": "Triage a secret-scan report into real findings vs noise (tests, rules, docs, artifacts). Local-only.",
   "version": "0.1.0",
   "packages": [
     {
@@ -9,7 +9,9 @@
       "registryBaseUrl": "https://npm.pkg.github.com",
       "identifier": "@zjdyzww/secret-triage",
       "version": "0.1.0",
-      "transport": { "type": "stdio" },
+      "transport": {
+        "type": "stdio"
+      },
       "runtimeHint": "node"
     }
   ],
@@ -20,10 +22,19 @@
       "inputSchema": {
         "type": "object",
         "properties": {
-          "report": { "type": "string" },
-          "fileContents": { "type": "object", "additionalProperties": { "type": "string" } }
+          "report": {
+            "type": "string"
+          },
+          "fileContents": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
         },
-        "required": ["report"]
+        "required": [
+          "report"
+        ]
       }
     }
   ]
