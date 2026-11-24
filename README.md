@@ -85,3 +85,36 @@ node node_modules/@zjdyzww/secret-triage/server.mjs
 
 `server.json` 已按 registry schema 写好（`io.github.zjdyzww/secret-triage`）。
 提交需要 `mcp-publisher` CLI 与 GitHub 认证，这一步尚未执行（UNVERIFIED）。
+
+## 上架 MCP Registry：只差一个人工点击（实测记录）
+
+已完成（全部有据）：
+| 步骤 | 结果 |
+|---|---|
+| `mcp-publisher validate` | ✅ server.json 有效（2025-12-11 schema） |
+| `mcp-publisher login github-oidc`（GitHub Actions 内） | ✅ Successfully logged in |
+| 包发布到 GitHub Packages（npm 类型） | ✅ `@zjdyzww/secret-triage@0.1.0`（`npm i` 可装） |
+| OCI 镜像构建并推送 GHCR | ✅ `ghcr.io/zjdyzww/secret-triage:0.1.0`（digest `354d8343…`） |
+
+**卡在哪**：registry 拒绝发布，原话——
+
+> `OCI image 'ghcr.io/zjdyzww/secret-triage:0.1.0' is private or requires authentication. Only public images are supported`
+
+而把 GHCR 包改成 public：
+
+```bash
+gh api -X PATCH /user/packages/container/secret-triage -f visibility=public
+# → 404 Not Found（token 已含 write:packages / delete:packages，仍 404：
+#   用户命名空间下的 container 包不允许经 REST 改可见性）
+```
+
+**解法（需人 30 秒）**：打开
+`https://github.com/users/zjdyzww/packages/container/secret-triage/settings`
+→ Danger Zone → Change visibility → Public
+
+改完之后重跑 workflow 即可上架：
+```bash
+gh workflow run publish-mcp-registry -R zjdyzww/mcp-secret-triage
+```
+
+**或者不用 OCI**：把包发到 npmjs.org（registry 只认 npmjs 或 OCI），但 npmjs 注册需要过 CAPTCHA——2026 年多份公开实验记录显示 agent 过不去。
