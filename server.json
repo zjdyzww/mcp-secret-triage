@@ -7,7 +7,6 @@
     {
       "registryType": "oci",
       "identifier": "ghcr.io/zjdyzww/secret-triage:0.1.0",
-      "version": "0.1.0",
       "transport": {
         "type": "stdio"
       },
