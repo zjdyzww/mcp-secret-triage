@@ -1,0 +1,13 @@
+{
+  "name": "@zjdyzww/secret-triage",
+  "version": "0.1.0",
+  "description": "MCP tool: triage secret-scan reports into real findings vs tests/rules/docs/artifacts noise. Zero deps, no network.",
+  "type": "module",
+  "bin": { "secret-triage-mcp": "server.mjs" },
+  "main": "server.mjs",
+  "files": ["server.mjs", "README.md"],
+  "publishConfig": { "registry": "https://npm.pkg.github.com" },
+  "license": "UNLICENSED",
+  "engines": { "node": ">=20" },
+  "keywords": ["mcp", "secret-scanning", "false-positives", "triage"]
+}

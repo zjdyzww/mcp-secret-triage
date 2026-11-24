@@ -66,3 +66,22 @@ stdio 端到端：`initialize → 2024-11-05`、`tools/call → real=1 triaged=1
 - 不替代扫描器：它只做扫描器**之后**那一步
 - 6 类语境之外一律判 `real`（宁严不宽）——**误判成"要处理"比漏判安全**
 - 不读文件、不联网、不写任何东西
+
+## 已发布（可安装）
+
+```bash
+# GitHub Packages（需要 GitHub token 作为 npm 凭据）
+echo "//npm.pkg.github.com/:_authToken=$GITHUB_TOKEN" > ~/.npmrc
+npm i @zjdyzww/secret-triage --registry=https://npm.pkg.github.com
+node node_modules/@zjdyzww/secret-triage/server.mjs
+```
+
+实测：`npm view @zjdyzww/secret-triage version → 0.1.0`；`npm i` 后 `initialize` 正常返回 `2024-11-05`。
+
+> 为什么发在 GitHub Packages 而不是 npmjs：npmjs 注册需要过 CAPTCHA（2026 年多份公开实验记录显示 agent 无法通过）。
+> 这是当前**无人工介入**下能走的最远一步。
+
+## MCP Registry 提交材料
+
+`server.json` 已按 registry schema 写好（`io.github.zjdyzww/secret-triage`）。
+提交需要 `mcp-publisher` CLI 与 GitHub 认证，这一步尚未执行（UNVERIFIED）。
