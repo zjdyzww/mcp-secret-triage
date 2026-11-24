@@ -10,6 +10,7 @@ on:
 permissions:
   contents: read
   id-token: write        # OIDC 必需
+  packages: write        # 若需重建 OCI 制品（当前镜像已发布，本步骤可省略）
 
 jobs:
   publish:
@@ -28,13 +29,8 @@ jobs:
       - name: 校验 server.json
         run: ./mcp-publisher validate
 
-      - name: 构建并推送 OCI 制品（registry 只接受 npmjs 或 OCI；npmjs 注册需 CAPTCHA）
-        run: |
-          set -euo pipefail
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-          docker build -t "ghcr.io/${GITHUB_REPOSITORY,,}:0.1.0" .
-          docker push "ghcr.io/${GITHUB_REPOSITORY,,}:0.1.0"
 
+      # 镜像已手动推送：ghcr.io/zjdyzww/secret-triage:0.1.0（digest 354d8343…）
       - name: OIDC 登录并发布
         run: |
           set -euo pipefail
